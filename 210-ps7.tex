@@ -1,0 +1,197 @@
+\input logicdocument
+
+\heading
+Week 7 Problem Set Solutions
+Your Name
+Introduction to Formal Logic
+\endheading
+
+For each of the following valid arguments, complete a Fitch-style natural deduction to prove its validity. Do this by filling in the missing lines, citations, or both.
+
+\problems
+\problem{1}
+\argument
+ A ^ B
+ B > C
+\argumentline
+ C v D
+\endargument
+	\answer
+	\fitchproof
+	 1. | A ^ B
+	 2. | B > C  ..  Goal: C v D
+	    |---
+	 3. | B      .  ^ Elim: 1
+	 4. |        .  > Elim: 2, 3
+	 5. |        .  v Intro: 4
+	\endfitchproof
+	\endanswer
+
+\problem{2}
+\argument
+ A ^ [B > D]
+ [A v C] > B
+\argumentline
+ D
+\endargument
+	\answer
+	\fitchproof
+	 1. | A ^ [B > D]
+	 2. | [A v C] > B  ..  Goal: D
+	    |---
+	 3. | 
+	\endfitchproof
+	\endanswer
+
+\problem{3}
+\argument
+ A > B
+ B > C
+\argumentline
+ A > [C v D]
+\endargument
+	\answer
+	\fitchproof
+	 1. | A > B
+	 2. | B > C         ..  Goal: A > [C v D]
+	    |---
+	 3. |  | A          ..  Assumption  .  Setting up: > Intro  .  Goal: C v D
+	    |  |---
+	 4. |  | 
+	\endfitchproof
+	\endanswer
+
+\problem{4}
+\argument
+ A > [B ^ C]
+ [B v D] > E
+\argumentline
+ A > E
+\endargument
+	\answer
+	\fitchproof
+	 1. | 
+	\endfitchproof
+	\endanswer
+
+\widerfitchsetup % This makes "Setting up: v Elim: #" fit better.
+\problem{5}
+\argument
+ A > C
+ B > C
+ [D ^ A] v [E ^ B]
+\argumentline
+ C
+\endargument
+	\answer
+	\fitchproof
+	 1. | A > C
+	 2. | B > C
+	 3. | [D ^ A] v [E ^ B]  ..  Goal: C
+	    |---
+	 4. |  | D ^ A  ..  Assumption  .  Setting up: v Elim: 3  .  Goal: C
+	    |  |---
+	    |  | 
+	    |  ++++
+	    |  +
+	 ?. |  | E ^ B  ..  Assumption  .  Setting up: v Elim: 3  .  Goal: C
+	    |  |---
+	    |  | 
+	    |  ++++
+	    | C         .  v Elim: 3, 4-, ?-
+	\endfitchproof
+	\endanswer
+
+\problem{6}
+\argument
+ A > C
+ B > D
+\argumentline
+ [A v B] > [C v D]
+\endargument
+	\answer
+	\fitchproof
+	 1. | A > C
+	 2. | B > D        ..  Goal: [A v B] > [C v D]
+	    |---
+	 3. |  | A v B     ..  Setting up: > Intro    .  Goal: C v D
+	    |  |---
+	 4. |  | 
+	\endfitchproof
+	\endanswer
+
+\problem{7}
+\argument
+ F(a) v G(a)
+ F(b) > G(b)
+\argumentline
+ b=a > G(b)
+\endargument
+\Hint You can begin by setting up either $>$ Intro or $v$ Elim. Both work.
+	\answer
+	\fitchproof
+	 1. | 
+	\endfitchproof
+	\endanswer
+
+\problem{8}
+\argument
+ A v B
+ A > B
+\argumentline
+ B
+\endargument
+\Hint This is the first proof where you need to use Reit.
+	\answer
+	\fitchproof
+	 1. | 
+	\endfitchproof
+	\endanswer
+
+\problem{9}
+\argument
+
+\argumentline
+ A > [B > A]
+\endargument
+\Hint Problems 10 and 11 from last week also had no premises.
+	\answer\resetfitchsetup
+	\fitchproof
+	 1. | 
+	\endfitchproof
+	\endanswer
+
+\problem{10}
+\argument
+ A v B
+ A > C
+ B > [F ^ G]
+ C > [D > E]
+\argumentline
+ D > [E v G]
+\endargument
+\Hint Again, it doesn't matter if you set up $>$ Intro or $v$ Elim first.
+	\answer
+	\fitchproof
+	 1. | 
+	\endfitchproof
+	\endanswer
+
+\problem{11}
+\argument
+ A v B
+ A > C
+ [C > B] > D
+ [C v D] > E
+\argumentline
+ E
+\endargument
+\Hint This requires something similar to problem 12 from last week.
+	\answer
+	\fitchproof
+	 1. | 
+	\endfitchproof
+	\endanswer
+
+\endproblems
+\bye

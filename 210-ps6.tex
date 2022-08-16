@@ -1,0 +1,256 @@
+\input logicdocument
+
+\heading
+Week 6 Problem Set Solutions
+Your Name
+Introduction to Formal Logic
+\endheading
+
+For each of the following valid arguments, complete a Fitch-style natural deduction to prove its validity. Do this by filling in the missing lines, citations, or both.
+
+\problems
+\problem{1}
+\argument
+ A ^ B
+ C ^ D
+\argumentline
+ A ^ D
+\endargument
+	\answer
+	\fitchproof
+	 1. | A ^ B
+	 2. | C ^ D  ..  Goal: A ^ D
+	    |---
+	 3. | A      .  ^ Elim: 1
+	 4. | B      .  ^ Elim: 1  .  (optional)
+	 5. |        .  ^ Elim: 2  .  (optional)
+	 6. |        .  ^ Elim: 2
+	 7. | A ^ D  .  ^ Intro: 3, 6
+	\endfitchproof
+	\endanswer
+
+\problem{2}
+\argument
+ A
+ A > B
+ B > C
+\argumentline
+ C
+\endargument
+	\answer
+	\fitchproof
+	 1. | A
+	 2. | A > B
+	 3. | B > C  ..  Goal: C
+	    |---
+	 4. | B      .  > Elim: 1, 2
+	 5. | C      .  
+	\endfitchproof
+	\endanswer
+
+\problem{3}
+\argument
+ [A v C] ^ [B > D]
+ [A v C] > B
+\argumentline
+ D
+\endargument
+	\answer
+	\fitchproof
+	 1. | [A v C] ^ [B > D]
+	 2. | [A v C] > B        ..  Goal: D
+	    |---
+	 3. | A v C              .  ^ Elim: 1
+	 4. |                    .  ^ Elim: 1
+	 5. |                    .  > Elim: 2, 3
+	 6. | 
+	\endfitchproof
+	\endanswer
+
+\problem{4}
+\argument
+ A > B
+ C > D
+ E > C
+\argumentline
+ [A ^ E] > [B ^ D]
+\endargument
+	\answer
+	\fitchproofnegindent
+	 1. | A > B
+	 2. | C > D
+	 3. | E > C     ..  Goal: [A ^ E] > [B ^ D]
+	    |---
+	 4. |  | A ^ E  ..  Assumption  .  Setting up: > Intro  .  Goal: B ^ D
+	    |  |---
+	 5. |  | 
+	 6. |  | 
+	 7. |  | 
+	 8. |  | 
+	 9. |  | 
+	 10.|  | B ^ D  .  
+	    |  ++++
+	 11.| [A ^ E] > [B ^ D]  .  > Intro: 5-10
+	\endfitchproof
+	\endanswer
+
+\problem{5}
+\argument
+ A > B
+ B > C
+\argumentline
+ [A ^ D] > [C ^ D]
+\endargument
+	\answer
+	\fitchproofnegindent
+	 1. | A > B
+	 2. | B > C     ..  Goal: [A ^ D] > [C ^ D]
+	    |---
+	 3. |  |        ..  Assumption  .  Setting up: > Intro  .  Goal: 
+	    |  |---
+	 4. |  | 
+	 5. |  | 
+	 6. |  | 
+	 7. |  | 
+	 8. |  | 
+	    |  ++++
+	 9. |           .  > Intro: 3-8
+	\endfitchproof
+	\endanswer
+
+\problem{6}
+\argument
+ F(a) ^ a=b
+ G(b)
+\argumentline
+ F(b) ^ G(a)
+\endargument
+	\answer
+	\fitchproof
+	 1. | F(a) ^ a=b
+	 2. | G(b)         ..  Goal: F(b) ^ G(a)
+	    |---
+	 3. | F(a)         .  ^ Elim: 1
+	 4. | a=b          .  ^ Elim: 1
+	 5. | F(b)         .  = Elim: 3, 4
+	 6. |              .  = Elim: 2, 4
+	 7. |              .  ^ Intro: 5, 6
+	\endfitchproof
+	\endanswer
+
+\problem{7}
+\argument
+ F(a) ^ [F(b) > G(b)]
+ a=b
+\argumentline
+ G(a) ^ G(b)
+\endargument
+	\answer
+	\fitchproof
+	 1. | F(a) ^ [F(b) > G(b)]
+	 2. | a=b          ..  Goal: G(a) ^ G(b)
+	    |---
+	 3. | F(a)         .  ^ Elim: 1
+	 4. | F(b) > G(b)  .  ^ Elim: 1
+	 5. | F(b)         .  = Elim: 2, 3
+	 6. | 
+	 7. | 
+	 8. | 
+	\endfitchproof
+	\endanswer
+Note: This is only one of multiple options for line 5.
+
+\problem{8}
+\argument
+ [F(a) ^ F(b)] > -G(a)
+ F(b) ^ F(c)
+\argumentline
+ b=a > -G(a)
+\endargument
+	\answer
+	\fitchproofnegindent
+	 1. | [F(a) ^ F(b)] > -G(a)
+	 2. | F(b) ^ F(c)    ..  Goal: b=a > -G(a)
+	    |---
+	 3. | 
+	\endfitchproof
+	\endanswer
+
+\problem{9}
+\argument
+ A > [C ^ D]
+ D > [A ^ B]
+\argumentline
+ A < D
+\endargument
+	\answer
+	\fitchproof
+	 1. | A > [C ^ D]
+	 2. | D > [A ^ B]   ..  Goal: A < D
+	    |---
+	 3. |  | A          ..  Assumption  .  Setting up: < Intro  .  Goal: D
+	    |  |---
+	    |  | 
+	    |  ++++
+	    |  +
+	 ?. |  | D          ..  Assumption  .  Setting up: < Intro  .  Goal: A
+	    |  |---
+	    |  | 
+	    |  ++++
+	    | A < D         .  < Intro: 3-, ?-
+	\endfitchproof
+	\endanswer
+
+\problem{10}
+\argument
+\argumentline
+ [A > B] > *[[A ^ -C] > B*]
+\endargument
+	\answer
+	\fitchproof
+	 1. |               ..  Goal: [A > B] > *[[A ^ -C] > B*]
+	    |---
+	 2. |  | A > B      ..  Setting up: > Intro  .  Goal: [A ^ -C] > B
+	    |  |---
+	 3. |  |  | A ^ -C  ..  Setting up: > Intro  .  Goal: B
+	    |  |  |---
+	 4. |  |  | 
+	\endfitchproof
+	\endanswer
+
+\problem{11}
+\argument
+\argumentline
+ *[[A ^ B] > C*] > *[A > [B > C]*]
+\endargument
+	\answer
+	\fitchproof
+	 1. |                 ..  Goal: *[[A ^ B] > C*] > *[A > [B > C]*]
+	    |---
+	 2. |  | [A ^ B] > C  ..  Setting up: > Intro  .  Goal: A > [B > C]
+	    |  |---
+	 3. |  | 
+	\endfitchproof
+	\endanswer
+
+\problem{12}
+\argument
+ [A ^ E] > F
+ [C ^ D] > B
+ [C > B] > A
+\argumentline
+ [E ^ D] > F
+\endargument
+\Hint This problem requires something really tricky.
+	\answer
+	\fitchproof
+	 1. | [A ^ E] > F
+	 2. | [C ^ D] > B
+	 3. | [C > B] > A  ..  Goal: [E ^ D] > F
+	    |---
+	 4. | 
+	\endfitchproof
+	\endanswer
+
+\endproblems
+\bye

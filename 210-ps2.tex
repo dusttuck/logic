@@ -1,0 +1,181 @@
+\input logicdocument
+
+\heading
+Week 2 Problem Set
+Your Name
+Introduction to Formal Logic
+\endheading
+
+I've begun each of the following truth tables. Complete them by filling in the missing Ts and Fs.
+
+\problems
+\problem{1}
+\truthtable
+ L(a) | L(r) : -.L(a).  v  .L(r)
+\truthtableline
+  T   |  T   : F. t  . *T  . t
+  T   |  F   : F. t  . *F  . f
+  F   |  T   : T. f  . *   . t
+  F   |  F   : T. f  . *   . f
+\endtruthtable
+
+\problem{2}
+\truthtable
+ L(a) | L(r) :  -.[.L(a). v .L(r).]
+\truthtableline
+  T   |  T   : * . . t  . T . t
+  T   |  F   : * . . t  . T . f
+  F   |  T   : * . . f  . T . t
+  F   |  F   : * . . f  . F . f
+\endtruthtable
+
+\problem{3}
+\truthtable
+ A | B : [.A. ^ .B.].  v  .-.B
+\truthtableline
+ T | T :  .t. T .t. . *   . .t
+ T | F :  .t. F .f. . *   . .f
+ F | T :  .f. F .t. . *   . .t
+ F | F :  .f. F .f. . *   . .f
+\endtruthtable
+
+\problem{4}
+\truthtable
+ A | B | C : A.  ^  .-.[.B. v .C.]
+\truthtableline
+ T | T | T : t. *   . . .t.   .t
+ T | T | F : t. *   . . .t.   .f
+ T | F | T : t. *   . . .f.   .t
+ T | F | F : t. *   . . .f.   .f
+ F | T | T : f. *   . . .t.   .t
+ F | T | F : f. *   . . .t.   .f
+ F | F | T : f. *   . . .f.   .t
+ F | F | F : f. *   . . .f.   .f
+\endtruthtable
+
+\endproblems
+\pagebreak
+
+Construct truth tables for the following sentences. For each one, state whether it's a tautology, a contradiction, or neither.
+
+\problems
+\problem{Example}
+$ A ^ -[A v B] $
+	\answer
+	\truthtable
+	 A | B : A.  ^  .-.[.A. v .B.]
+	\truthtableline
+	 T | T : t. *F  .F. .t. T .t
+	 T | F : t. *F  .F. .t. T .f
+	 F | T : f. *F  .F. .f. T .t
+	 F | F : f. *F  .T. .f. F .f
+	\endtruthtable
+	Contradiction.
+	\endanswer
+
+\problem{5}
+$ [A ^ B] v [A ^ -B] $
+	\answer
+	\truthtable
+	 A | B : [.A. ^ .B.].  v  .[.A. ^ . - .B.]
+	\truthtableline
+	 T | T :  . .   . . . *   . . .   .   . 
+	 T | F :  . .   . . . *   . . .   .   . 
+	 F | T :  . .   . . . *   . . .   .   . 
+	 F | F :  . .   . . . *   . . .   .   . 
+	\endtruthtable
+	Tautology/Contradiction/Neither?
+	\endanswer
+
+\problem{6}
+$ -*[A v [B ^ C]*] v [A v B] $
+	\answer
+	\truthtable
+	 A | B | C : -.*[.A. v .[.B. ^ .C.]*].  v  .[.A. v .B.]
+	\truthtableline
+	 T | T | T :  .  . .   . . .   . .   . *   . . .   . 
+	 T | T | F :  .  . .   . . .   . .   . *   . . .   . 
+	 T | F | T :  .  . .   . . .   . .   . *   . . .   . 
+	 T | F | F :  .  . .   . . .   . .   . *   . . .   . 
+	 F | T | T :  .  . .   . . .   . .   . *   . . .   . 
+	 F | T | F :  .  . .   . . .   . .   . *   . . .   . 
+	 F | F | T :  .  . .   . . .   . .   . *   . . .   . 
+	 F | F | F :  .  . .   . . .   . .   . *   . . .   . 
+	\endtruthtable
+	Tautology/Contradiction/Neither?
+	\endanswer
+
+\problem{7}
+$ -*[[-A v -C] v [B v C]*] $
+	\answer
+	\truthtable
+	 A | B | C :  -.*[[.-.A. v .-.C.]. v .[.B. v .C.]*]
+	\truthtableline
+	   |   |   : * .   . . .   . . . .   . . .   . 
+	   |   |   : * .   . . .   . . . .   . . .   . 
+	   |   |   : * .   . . .   . . . .   . . .   . 
+	   |   |   : * .   . . .   . . . .   . . .   . 
+	   |   |   : * .   . . .   . . . .   . . .   . 
+	   |   |   : * .   . . .   . . . .   . . .   . 
+	   |   |   : * .   . . .   . . . .   . . .   . 
+	   |   |   : * .   . . .   . . . .   . . .   . 
+	\endtruthtable
+	Tautology/Contradiction/Neither?
+	\endanswer
+
+\endproblems
+
+Construct truth tables for the following sets of sentences and state which ones are equivalent.
+
+\problems
+\problem{Example}
+\list
+a. $ A v -B $
+b. $ -[A ^ -B] $
+c. $ -[-A ^ B] $
+\endlist
+	\answer
+	\truthtable
+	 A | B : A. v .-.B | -.[.A. ^ .-.B.] | -.[.-.A. ^ .B.]
+	\truthtableline
+	 T | T : t.*T .T.t |*T. .t. F .F.t.  |*T. .F.t. F .t
+	 T | F : t.*T .T.f |*F. .t. T .T.f.  |*T. .F.t. F .f
+	 F | T : f.*F .F.t |*T. .f. F .F.t.  |*F. .T.f. T .t
+	 F | F : f.*T .T.f |*T. .f. F .T.f.  |*T. .T.f. F .f
+	\endtruthtable
+	a = c
+	\endanswer
+
+\problem{8}
+\list
+a. $ -[A v B] $
+b. $ -[A ^ B] $
+c. $ -A ^ -B $
+d. $ -A v -[B ^ A] $
+\endlist
+	\answer
+	\truthtable
+	 A | B : -.[.A. v .B.] | -.[.A. ^ .B.] | -.A. ^ .-.B | -.A. v .-.[.B. ^ .A.]
+	\truthtableline
+	   |   :  . . .   . .  |  . . .   . .  |  . .   . .  |  . .   . . . .   . 
+	\endtruthtable
+	Equivalences?
+	\endanswer
+
+\problem{9}
+\list
+a. $ A v [B ^ C] $
+b. $ A ^ [B v C] $
+c. $ [A v B] ^ [A v C] $
+\endlist
+	\answer
+	\truthtable
+	 A | B | C : A. v .[.B. ^ .C.] | A. ^ .[.B. v .C.] | [.A. v .B.]. ^ .[.A. v .C.]
+	\truthtableline
+	   |   |   :  .   . . .   . .  |  .   . . .   . .  |  . .   . . .   . . .   . 
+	\endtruthtable
+	Equivalences?
+	\endanswer
+
+\endproblems
+\bye

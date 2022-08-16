@@ -1,0 +1,743 @@
+% ---------------
+% General utility
+% ---------------
+%
+% These are macros that are used in more than one set of definitions below.
+
+\def\ensureline{\hskip0pt}%  Make sure that the line has begun.
+\def\logicstrut#1#2{\vrule height#1 depth#2 width0pt}
+\def\makereturnsspaces{\catcode`\^^M=10\relax}
+\def\ignoreallspaces{%
+	\ifx\endignoreallspaces\undefined%
+		\edef\endignoreallspaces{\catcode`\noexpand\ =\the\catcode`\ \relax}%
+	\fi%
+	\catcode`\ =9%
+}
+
+
+% -------------
+% Abbreviations
+% -------------
+%
+% \connectives and \quantifiers make several characters produce standard symbols
+% used in logic. Specifically, they make occurrences of these characters in math
+% mode behave like these expressions:
+%
+%			character	expression
+%
+%	\connectives:	v (lower-case)	\mathrel\lor
+%			-		\lnot
+%			^		\mathrel\land
+%			>		\rightarrow
+%			<		\leftrightarrow
+%			!		\bot
+%			=		\mathbin=
+%
+%	\quantifiers:	A		\forall
+%			E		\exists
+%
+% In addition, \makeasteriskbig makes the * symbol equivalent to \big.
+%
+% I find these abbreviations helpful, but because the characters all have other
+% uses meanings in TeX, these macros are likely to break other packages/macros.
+% However, they are not required for any of the other macros in this document to
+% function, so they can be freely omitted.
+%
+% I don't use ~ for negation or & for conjunction, so I've commented out the
+% relevant lines, but I include those abbreviations, too, and all the macros are
+% compatible with them (so they never use tilde as tie or ampersand as alignment
+% tab).
+
+\newif\ifconnectives \connectivesfalse
+\def\connectives{%
+	\ifconnectives%
+	\else%
+		\edef\endconnectives{%
+			\noexpand\connectivesfalse%
+			\mathcode`\noexpand\v=\the\mathcode`\v%
+			\mathcode`\noexpand\==\the\mathcode`\=%
+			\catcode`\noexpand\-=\the\catcode`\-%
+%			\catcode`\noexpand\~=\the\catcode`\~%
+			\catcode`\noexpand\^=\the\catcode`\^%
+%			\catcode`\noexpand\&=\the\catcode`\&%
+			\catcode`\noexpand\>=\the\catcode`\>%
+			\catcode`\noexpand\<=\the\catcode`\<%
+			\catcode`\noexpand\!=\the\catcode`\!%
+			\mathcode`\noexpand\-=\the\mathcode`\-%
+%			\mathcode`\noexpand\~=\the\mathcode`\~%
+			\mathcode`\noexpand\^=\the\mathcode`\^%
+%			\mathcode`\noexpand\&=\the\mathcode`\&%
+			\mathcode`\noexpand\>=\the\mathcode`\>%
+			\mathcode`\noexpand\<=\the\mathcode`\<%
+			\mathcode`\noexpand\!=\the\mathcode`\!\relax%
+		}%
+	\fi%
+	\connectivestrue%
+	\mathcode`\v="325F%  \lor, but mathrel instead of mathbin
+	\mathcode`\=="203D%  still =, but mathbin instead of mathrel
+	\catcode`\-=12%
+%	\catcode`\~=12%
+	\catcode`\^=12%
+%	\catcode`\&=12%
+	\catcode`\>=12%
+	\catcode`\<=12%
+	\catcode`\!=12%
+	\mathcode`\-="023A%  \lnot
+%	\mathcode`\~="0218%  \sim, but mathord instead of mathrel
+	\mathcode`\^="325E%  \land, but mathrel instead of mathbin
+%	\mathcode`\&="3026%  still \&, but mathrel instead of mathord
+	\mathcode`\>="3221%  \rightarrow
+%	\mathcode`\>="321B%  \supset
+	\mathcode`\<="3224%  \leftrightarrow
+%	\mathcode`\<="3211%  \equiv
+	\mathcode`\!="023F%  \bot
+}
+
+\newif\ifquantifiers \quantifiersfalse
+\def\quantifiers{%
+	\ifquantifiers%
+	\else%
+		\edef\endquantifiers{%
+			\noexpand\quantifiersfalse%
+			\mathcode`\noexpand\A=\the\mathcode`\A%
+			\mathcode`\noexpand\E=\the\mathcode`\E\relax%
+		}%
+	\fi%
+	\quantifierstrue%
+	\mathcode`\A="0238%
+	\mathcode`\E="0239%
+}
+
+\newif\ifasterisk \asteriskfalse
+\begingroup
+\catcode`\*=\active
+\gdef\makeasteriskbig{%
+	\ifasterisk%
+	\else%
+		\edef\resetasterisk{%
+			\noexpand\asteriskfalse%
+			\catcode`\noexpand\*=\the\catcode`\*\relax%
+		}%
+	\fi%
+	\asterisktrue%
+	\catcode`\*=\active%
+	\let*=\big%
+}
+\endgroup
+
+
+% ------------------
+% Fitch-style proofs
+% ------------------
+%
+% Notes:
+%
+% * Although spaces can usually be omitted in TeX, there must be a space
+%   somewhere between a | and a subsequent - occurring as a negation.
+%
+% * Within \fitchproof, | makes spaces active, so don't use spaces in macro
+%   definitions that could appear within \fitchproof.
+%
+% * Because . is used as alignment tab, it cannot be used in any other way. This
+%   is why all dimens are named and defined in advance.
+%
+% * To ensure compatibility with \connectives, - also cannot be used.
+
+
+% ----------------------------------
+% Fitch-style proofs: Default values
+% ----------------------------------
+
+\newdimen\fitchrowheight    \newdimen\fitchrowdepth
+\newdimen\fitchbarrowheight \newdimen\fitchbarrowdepth
+\newdimen\fitchbarlength
+\newdimen\fitchlinethickness
+\newdimen\fitchpaddingthickness
+\newdimen\fitchspace
+
+\fitchrowheight=13.5pt \fitchrowdepth=7.5pt%   Rows containing formulas
+\fitchbarrowheight=4pt \fitchbarrowdepth=6pt%  Rows containing horizontal bars
+\fitchbarlength=48pt%                          Length of horizontal bars
+\fitchlinethickness=1.2pt%                     Thickness of all lines
+\fitchpaddingthickness=4pt%                    Padding produced by +
+\fitchspace=6pt%                               Governs all horizontal spacing
+
+% The widest connective is used to line up all "Intro"s and "Elim"s
+\let\widestconnective=\rightarrow
+
+% Three options for how to indent notes in a proof
+\def\fitchnotesindent{\def\fitchnotesskip{\fitchskip}}
+\def\fitchnotesnoindent{\def\fitchnotesskip{\relax}}
+\def\fitchnotesnegindent{\def\fitchnotesskip{\fitchnegskip}}
+\fitchnotesindent
+
+
+% -------------------------------------------
+% Fitch-style proofs: Preliminary definitions
+% -------------------------------------------
+
+\def\fitchstrut{\relax\logicstrut\fitchrowheight\fitchrowdepth}
+\def\fitchbarstrut{\relax\logicstrut\fitchbarrowheight\fitchbarrowdepth}
+\def\fitchpaddingstrut{\relax\logicstrut\fitchpaddingthickness{0pt}}
+
+\newdimen\fitchspaceneg
+\def\setfitchspaceneg{\fitchspaceneg=-\fitchspace}
+
+\newdimen\fitchsetupskipamount
+\def\setfitchsetupskip{%
+	\setbox0\hbox{{\bf Setting up:{\rm\enspace}\spacedconnective\widestconnective \fitchsetuprule}}%
+	\fitchsetupskipamount=\wd0%
+	\def\fitchsetupskip{\hskip\fitchsetupskipamount{\rm\hskip.25em}\fitchskip}%
+}
+
+\def\resetfitchsetup{\def\fitchsetuprule{Intro}}
+\def\widerfitchsetup{\def\fitchsetuprule{Elim:\rm\enspace0}}
+\resetfitchsetup
+
+\def\setfitchskips{%
+	\setfitchspaceneg%
+	\def\fitchskip{\hskip4\fitchspace}%
+	\def\fitchnegskip{\hskip4\fitchspaceneg}%
+	\setfitchsetupskip%
+}
+
+\def\fitchbar{\vtop{\hrule height\fitchlinethickness depth0pt width\fitchbarlength}}
+\def\fitchline{\hskip\fitchspace\vrule width\fitchlinethickness\hskip2\fitchspace\makehyphenfitchbar}
+
+\newif\ifisfitchnotes \isfitchnotesfalse
+\begingroup
+\catcode`\-=\active
+\gdef\makehyphenendash{%
+	\catcode`\-=\active%
+	\def-{\char"7B\relax}%
+}
+\endgroup
+
+\newdimen\connectivemaxwidth
+\def\setconnectivemaxwidth{%
+	\setbox0\hbox{$\widestconnective$}%
+	\connectivemaxwidth=\wd0%
+}
+
+% The following three definitions ensure that \spacedconnective does nothing if
+% it's followed by a macro whose expansion begins with \relax.
+
+\def\spacedconnective{\afterassignment\spacedconnectiveA\let\next=}
+\def\spacedconnectiveA{\expandafter\spacedconnectiveB\next}
+\def\spacedconnectiveB#1{%
+	\ifx#1\relax\else%
+		\relax\setconnectivemaxwidth%
+		\hbox to\connectivemaxwidth{\hss$#1$\hss}%
+		\space\ignorespaces%
+	\fi%
+}
+
+\begingroup
+\catcode`\ =\active
+\catcode`\-=\active
+\catcode`\+=\active
+\gdef\makehyphenfitchbar{%
+	\ifx\resethyphen\undefined%
+		\edef\resethyphen{\global\catcode`\noexpand\-=\the\catcode`\-\relax}%
+	\fi%
+	\catcode`\ =\active%
+	\catcode`\-=\active%  TeX doesn't like \+ here, so use `+ instead of `\+
+	\catcode`+=\active%   (I think the problem is that \+ is \outer).
+	\let =\resethyphen%  Space, which is active, is now \resethyphen.
+	\def-{$%
+		\let-=\relax%
+		\hskip2\fitchspaceneg%
+		\fitchbar%
+		\let\fitchstrut=\fitchbarstrut%
+	$}%
+	\def+{$%
+		\let+=\relax%
+		\let\fitchstrut\fitchpaddingstrut%
+	$}%
+}
+\endgroup
+
+\newdimen\fitchnamepadding \fitchnamepadding=3pt
+\newdimen\fitchnamevadjust \fitchnamevadjust=-3.4pt
+\begingroup
+\catcode`\:=\active
+\gdef\makecolonrm{%
+	\catcode`\:\active%
+	\def:{%
+		\ifx\resetcapitalr\undefined \else\resetcapitalr \fi%
+		\ifx\resetcapitals\undefined \else\resetcapitals \fi%
+		\fitchnotesindent%
+		\char"3A\rm%
+		\ifisfitchnotes$ \else\makehyphenendash \fi%
+		\enspace\ignorespaces%
+	}%
+}
+\gdef\makecolonspacedconnective{%
+	\catcode`\:\active%
+	\def:{%
+		\ignoreallspaces%
+		\char"3A{\rm\enspace}%
+		\makecolonrm%
+		\spacedconnective%
+	}%
+}
+\gdef\makecolonfitchname{%  This is slightly adapted from \boxit in the TeXbook
+	\catcode`\:\active% via eplain.
+	\def:{%
+		\hskip\fitchnamepadding%
+		\raise\fitchnamevadjust\vbox\bgroup%
+			\hrule%
+			\hbox\bgroup%
+				\vrule%
+				\kern\fitchnamepadding%
+				\vbox\bgroup%
+					\kern\fitchnamepadding\parindent=0pt%
+					\hbox\bgroup$%
+		\def:{%
+					$\egroup\kern\fitchnamepadding%
+				\egroup%
+				\kern\fitchnamepadding%
+				\vrule%
+			\egroup%
+			\hrule%
+		\egroup\hskip2\fitchspace%
+		}%
+	}%
+}
+\endgroup
+
+\newif\ifperiodprintsperiod
+\begingroup
+\catcode`\.=\active
+\catcode`\S=\active
+\gdef\makeperiodprintperiod{%
+	\periodprintsperiodtrue%
+	\catcode`\.=\active%
+	\def.{\char"2E&\relax}%
+}
+\gdef\makeperiodspacedconnective{%
+	\catcode`\.=\active%
+	\def.{%
+		\ifmmode$\fi&\relax%
+		\spacedconnective%
+	}%
+}
+\gdef\makeperiodnotes{%
+	\catcode`\.=\active%
+	\def.{%
+		\relax%  Passed to \spacedconnectiveB.
+		\fitchnotesskip%
+		\isfitchnotestrue\makecapitalssetup%
+		\def.{\fitchskip{\rm\enspace}}%
+		\ignoreallspaces%
+	}%
+}
+\gdef\makecapitalssetup{%
+	\ifx\resetcapitals\undefined%
+		\edef\resetcapitals{\catcode`\noexpand\S=\the\catcode`\S\relax}%
+	\fi%
+	\catcode`\.=\active%
+	\catcode`\S=\active%
+	\defS{%  \isfitchnotestrue will be reset by the next period
+		\ifx\endignoreallspaces\undefined \else\endignoreallspaces \fi%
+		\isfitchnotesfalse%  With the \hss in the definition of period
+		\hbox to0pt\bgroup%  below, this \hbox is a manual \rlap.
+			\char"53%  \char"50 = capital S
+			\makecolonspacedconnective%
+			\def.{\hss\egroup\resetcapitals\fitchsetupskip\isfitchnotestrue\ignorespaces}%
+	}%
+}
+\endgroup
+
+\begingroup
+\catcode`\|=\active
+\gdef\makepipefitchline{%
+	\catcode`\|=\active%
+	\def|{$\fitchline$}%
+}
+\gdef\makepipefitchtab{%
+	\catcode`\|=\active%
+	\def|{&$\fitchline$}%
+}
+\endgroup
+
+\begingroup
+\catcode`\R=\active
+\gdef\makecapitalrreit{%
+	\ifx\resetcapitalr\undefined%
+		\edef\resetcapitalr{\catcode`\noexpand\R=\the\catcode`\R\relax}%
+	\fi%
+	\catcode`\R=\active%
+	\defR{%
+		\relax%  Passed to \spacedconnectiveB.
+		\char"52%  \char"52 = capital R.
+	}%
+}
+\endgroup
+
+
+% -------------------------------------------------------------
+% Fitch-style proofs: The \fitchproof and \endfitchproof macros
+% -------------------------------------------------------------
+
+\newtoks\everyfitchproof \everyfitchproof{\relax}
+\newtoks\everyendfitchproof \everyendfitchproof{\relax}
+
+\begingroup
+\catcode`\.=\active%  Period will be used as alignment tab.
+\gdef\fitchproofcore#1{\ensureline\vtop\bgroup\the\everyfitchproof
+	#1
+	\setfitchskips
+	\periodprintsperiodfalse
+	\catcode`\.=\active
+	\offinterlineskip
+	\def\par{\relax\ifmmode$\fi\ifperiodprintsperiod\else.\fi\cr\ignorespaces}
+	\obeylines%
+	\halign\bgroup%
+		\makepipefitchtab%            Column 1: line numbers
+		\makeperiodprintperiod%
+		\hfil##\hskip\fitchspace&%
+		\makepipefitchline%           Column 2: indentation and formulas
+		\makeperiodspacedconnective%
+		\makecolonfitchname%
+		$##\fitchstrut\hfil&%
+		\makeperiodnotes%             Column 3: citations and notes
+		\makecolonrm%
+		\makecapitalrreit%
+		\isfitchnotesfalse%
+		\fitchskip\bf##\hfil\cr%
+		\makereturnsspaces
+}%  The previous line ensures that blank lines immediately following \fitchproof
+\endgroup%  are ignored. It does not end with %, so TeX sees a space.
+
+\def\fitchproof{\fitchproofcore{}}
+\def\fitchproofindent{\fitchproofcore{\fitchnotesindent}}
+\def\fitchproofnoindent{\fitchproofcore{\fitchnotesnoindent}}
+\def\fitchproofnegindent{\fitchproofcore{\fitchnotesnegindent}}
+
+\def\endfitchproof{\cr\egroup\egroup\the\everyendfitchproof}
+
+
+% ------------
+% Truth tables
+% ------------
+%
+% Notes:
+%
+% * Because . is used as alignment tab, it cannot be used in any other way. This
+%   is why all dimens are named and defined in advance.
+%
+% * To ensure compatibility with \connectives, - also cannot be used.
+
+% ----------------------------
+% Truth tables: Default values
+% ----------------------------
+
+\newdimen\truthtablerowheight \newdimen\truthtablerowdepth
+\newdimen\truthtablefirstrowdepthadjust
+\newdimen\truthtablelinethickness
+\newdimen\truthtableinteritemspace
+
+\truthtablerowheight=10.5pt \truthtablerowdepth=3.5pt%  Height/depth of each row
+\truthtablefirstrowdepthadjust=1pt%  Depth increase for first row
+\truthtablelinethickness=1.2pt%      Thickness of all lines
+\truthtableinteritemspace=4pt%       Governs all horizontal spacing
+
+
+% -------------------------------------
+% Truth tables: Preliminary definitions
+% -------------------------------------
+
+\font\eightrm=cmr8
+\font\elevenbf=cmbx10 scaled \magstephalf
+
+\def\ttstrut{\relax\logicstrut\truthtablerowheight\truthtablerowdepth}
+\def\ttfirstlinestrut{{\advance\truthtablerowdepth by\truthtablefirstrowdepthadjust\ttstrut}}
+
+\newdimen\tthalfinteritemspace
+\def\settthalfinteritemspace{\tthalfinteritemspace=.5\truthtableinteritemspace}
+
+\newif\ifttfirstrow
+\def\ttvrule{{%
+	\vrule width\truthtablelinethickness%
+	\ifttfirstrow\ttfirstlinestrut\else\ttstrut\fi%
+}}
+
+\def\makettcellmath{\def\ttcell{${}}}
+\def\makettcellvalues{\global\def\ttcell{\eightrm\makeasteriskttValue}}
+
+\newdimen\ttValueshift \ttValueshift=-.7pt
+\let\ttValuefont=\elevenbf
+
+% The following three definitions ensure that \ttValue does nothing if it's
+% followed by a macro whose expansion begins with \relax.
+
+\def\ttValue{\afterassignment\ttValueA\let\next=}
+\def\ttValueA{\expandafter\ttValueB\next}
+\def\ttValueB#1{%
+	\ifx#1\relax\else%
+		\raise\ttValueshift\hbox{\ttValuefont#1}%
+	\fi%
+}
+
+\begingroup
+\catcode`\*=\active
+\gdef\makeasteriskttValue{%
+	\catcode`\*=\active%
+	\let*\ttValue\relax%
+}
+\endgroup
+
+\def\truthtableline{%
+	\ifmmode$\fi\cr\noalign{%
+		\hrule height\truthtablelinethickness%
+		\global\ttfirstrowfalse%
+		\makettcellvalues%
+	}%
+}
+
+
+% -------------------------------------------------------
+% Truth tables: The \truthtable and \endtruthtable macros
+% -------------------------------------------------------
+
+\newtoks\everytruthtable \everytruthtable{\relax}
+\newtoks\everyendtruthtable \everyendtruthtable{\relax}
+
+\begingroup
+\catcode`\.=\active%  Period will be used as alignment tab.
+\catcode`\|=\active
+\catcode`\:=\active
+\catcode`\T=\active
+\catcode`\F=\active
+\gdef\truthtable{\ensureline\vtop\bgroup\the\everytruthtable
+	\ifx\endquantifiers\undefined \else\endquantifiers \fi%  A and E work
+	\catcode`\.=\active%                                     normally in
+	\catcode`\|=\active%                                     truth tables.
+	\catcode`\:=\active
+	\def\endcell{{}\ifmmode$\fi&}
+	\def.{\relax\endcell\relax}%  The initial \relax is to be passed to *.
+	\def|{.\endcell\omit\ttvrule..}
+	\def:{.\endcell\omit\ttvrule\thinspace\ttvrule..}
+	\offinterlineskip
+	\ttfirstrowtrue
+	\tabskip=\truthtableinteritemspace
+	\settthalfinteritemspace
+	\makettcellmath
+	\ignoreallspaces
+	\def\par{\endcell\omit\hskip-\tthalfinteritemspace\cr{}}
+	\obeylines%
+	\halign\bgroup%
+		\hskip\tthalfinteritemspace\hfil\ttcell##\hfil&&%
+		\hfil\ttcell##{}\hfil\ttstrut\cr%
+		\makereturnsspaces
+}%  The previous line ensures that blank lines immediately following \truthtable
+\endgroup%  are ignored. It does not end with %, so TeX sees a space.
+
+\def\endtruthtable{\crcr\egroup\egroup\the\everyendtruthtable}
+
+
+% ------------------
+% First-order models
+% ------------------
+
+\newdimen\fomodelfirstrowheight \newdimen\fomodelfirstrowdepth
+\newdimen\fomodelrowheight      \newdimen\fomodelrowdepth
+\newdimen\fomodelpadding
+\newdimen\fomodelspace
+
+\fomodelfirstrowheight=8.5pt \fomodelfirstrowdepth=8.5pt%  First row (domain)
+\fomodelrowheight=11pt       \fomodelrowdepth=3.5pt%       Subsequent rows
+\fomodelpadding=1.5pt%  Padding between rows
+\fomodelspace=12pt%     Horizontal space after colons
+
+
+\newif\iffomodelfirstrow
+\def\fomodelstrut{%
+	\iffomodelfirstrow\logicstrut{\fomodelfirstrowheight}{\fomodelfirstrowdepth}%
+	\else\logicstrut{\fomodelrowheight}{\fomodelrowdepth}%
+	\fi%
+}
+
+\begingroup
+\catcode`\<=\active
+\catcode`\>=\active
+\gdef\makefomodelangles{%
+	\catcode`\<=\active%
+	\catcode`\>=\active%
+	\def<{$\langle$\resetcommasf}%
+	\def>{$\rangle$\increasecommasf}%
+}
+\endgroup
+
+\def\increasecommasf{\sfcode`\,2000}
+
+\begingroup
+\catcode`\:=\active%  Colon will be used as alignment tab.
+\catcode`\.=\active%  Period will also sometimes be used as alignment tab.
+\gdef\firstordermodel{\ensureline\vtop\bgroup%
+	\catcode`\:=\active
+	\catcode`\.=\active
+	\edef\resetcommasf{\sfcode`\noexpand\,=\the\sfcode`\,\relax}
+	\increasecommasf
+	\fomodelfirstrowtrue
+	\offinterlineskip
+	\openup\fomodelpadding
+	\def\fomodelalignmenttab##1{%
+		\ifmmode$\fi%
+		\rlap{##1}%
+		\global\fomodelfirstrowfalse%
+		\hskip\fomodelspace%
+		&\ignorespaces%
+	}
+	\def:{\fomodelstrut\fomodelalignmenttab{\char"3A}}
+	\def.{\strut\fomodelalignmenttab{\relax}}
+	\def\par{\ifmmode$\fi\cr\ignorespaces}
+	\obeylines%
+	\halign\bgroup%
+		\iffomodelfirstrow\bf\else$\fi%
+		\hfil##&%
+		\vtop{\normalbaselines\makefomodelangles##}\hfil\cr%
+		\makereturnsspaces
+}%          The previous line ensures that blank lines immediately following
+\endgroup%  \firstordermodel are ignored. It does not end with %, so TeX sees a
+%           space.
+
+\def\endfirstordermodel{{}\ifmmode$\fi\cr\egroup\egroup}
+
+
+% ---------
+% Arguments
+% ---------
+
+\newdimen\argumentpadding
+\newdimen\argumentsidepadding
+\newdimen\argumentlinepadding
+\newdimen\argumentlinethickness
+
+\argumentpadding=3pt%          Padding between rows (3pt = \jot)
+\argumentsidepadding=3pt%      Padding on either side of each row
+\argumentlinepadding=5pt%      Padding above and below the horizontal line
+\argumentlinethickness=1.2pt%  Thickness of the horizontal line
+
+
+\def\argumentline{\crcr\noalign{\kern\argumentlinepadding\hrule height\argumentlinethickness\kern\argumentlinepadding}}
+
+\def\argument{\ensureline\vtop\bgroup
+	\openup\argumentpadding
+	\def\par{\crcr}
+	\halign\bgroup%
+		\obeylines%
+		\hskip\argumentsidepadding%
+		$##$%
+		\hskip\argumentsidepadding%
+		\hfil\cr%
+}
+\def\endargument{\crcr\egroup\egroup}
+
+
+% ----------------------
+% Alternate math letters
+% ----------------------
+
+\def\setfam#1#2#3#4#5{%
+	\textfont#1=\csname#3#2\endcsname%
+	\scriptfont#1=\csname#4#2\endcsname%
+	\scriptscriptfont#1=\csname#5#2\endcsname%
+}
+
+\def\makenumeralsfam#1{%
+	\mathcode`\0="0#130%
+	\mathcode`\1="0#131%
+	\mathcode`\2="0#132%
+	\mathcode`\3="0#133%
+	\mathcode`\4="0#134%
+	\mathcode`\5="0#135%
+	\mathcode`\6="0#136%
+	\mathcode`\7="0#137%
+	\mathcode`\8="0#138%
+	\mathcode`\9="0#139%
+}
+
+\font\tenss=cmss10
+\font\sevenss=cmss10 scaled 700%  Using cmss10 scaled because smaller cmss fonts
+\font\fivess=cmss10 scaled 500%   look ugly.
+
+\def\ssmath{%
+	\setfam{15}{ss}{ten}{seven}{five}%
+	\everymath{\fam15}%
+	\makenumeralsfam0%
+}
+
+
+% --------------------------------------------
+% Italic math letters with normal text spacing
+% --------------------------------------------
+
+\font\sevenit=cmti7
+\font\fiveit=cmti5
+
+\def\itmath{%
+	\setfam{15}{it}{ten}{seven}{five}%
+	\everymath{\fam15}%
+	\makenumeralsfam0%
+}
+
+
+% -------------------------
+% Models of relative height
+% -------------------------
+%
+% These are a simple way to demonstrate invalidity for arguments about relative 
+% heights/sizes.
+
+\newdimen\heightmodelinitialbarheight
+\newdimen\heightmodelbaradvance
+\newdimen\heightmodelbarwidth
+\newdimen\heightmodelspace
+
+\heightmodelinitialbarheight=16pt%  Initial height of the bars
+\heightmodelbaradvance=8pt%         Amount to increase bar height
+\heightmodelbarwidth=6pt%           Width of the bars
+\heightmodelspace=8pt%              Horizontal space between items
+
+
+\newdimen\heightmodelbarheight
+\def\resetheightmodelbarheight{\heightmodelbarheight=\heightmodelinitialbarheight}
+
+\def\heightmodelbar{\vrule height\heightmodelbarheight width\heightmodelbarwidth}
+
+\def\heightmodelitem{%
+	\ensureline\vbox\bgroup%
+		\halign\bgroup%
+			\hss##\hss\cr%
+			\hbox{\heightmodelbar}\cr%
+}
+\def\endheightmodelitem{\cr\egroup\egroup}
+
+\begingroup
+\catcode`\<=\active
+\catcode`\==\active%  Don't use = after this.
+\gdef\heightmodel{\ensureline\hbox\bgroup%
+	\resetheightmodelbarheight%
+	\catcode`\<\active%
+	\catcode`\=\active%
+	\def={%
+		\endheightmodelitem%
+		\hskip\heightmodelspace%
+		\heightmodelitem%
+	}%
+	\def<{%
+		\endheightmodelitem%
+		\advance\heightmodelbarheight by\heightmodelbaradvance%
+		\hskip\heightmodelspace%
+		\heightmodelitem%
+	}%
+	\ignoreallspaces%
+	\let\par\relax%
+	\obeylines%
+	\heightmodelitem%
+}
+\endgroup
+
+\def\endheightmodel{\endheightmodelitem\egroup}

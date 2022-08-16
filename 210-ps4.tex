@@ -1,0 +1,180 @@
+\input logicdocument
+
+\heading
+Week 4 Problem Set
+Your Name
+Introduction to Formal Logic
+\endheading
+
+Translate the following English sentences into the language of first-order logic.
+
+\problems
+\problem{1}
+If Ruth is a logician, then she's happy.
+	\answer
+	$ $
+	\endanswer
+
+\problem{2}
+Ruth is a logician if she's happy.
+	\answer
+	$ $
+	\endanswer
+
+\problem{3}
+Ruth is a logician only if she's happy.
+	\answer
+	$ $
+	\endanswer
+
+\problem{4}
+If Ruth and Alonzo are happy, then so is Kurt.
+	\answer
+	$ $
+	\endanswer
+
+\problem{5}
+Ruth is happy only if either Alonzo or Kurt is.
+	\answer
+	$ $
+	\endanswer
+
+\problem{6}
+If Ruth is a logician, then she'll only be happy if she's working.
+	\answer
+	$ $
+	\endanswer
+
+\problem{7}
+Ruth is happy if and only if she's a logician.
+	\answer
+	$ $
+	\endanswer
+
+\problem{8}
+If Ruth is happy, then she's not working.
+	\answer
+	$ $
+	\endanswer
+
+\problem{9}
+Ruth is working unless she's happy.
+	\answer
+	$ $
+	\endanswer
+
+\problem{10}
+Ruth is working unless she's a happy logician.
+	\answer
+	$ $
+	\endanswer
+
+\problem{11}
+If either Ruth or Alonzo is working, then neither is happy.
+	\answer
+	$ $
+	\endanswer
+
+\problem{12}
+Ruth isn't happy unless she's at work, and in that case, Alonzo is also working.
+	\answer
+	$ $
+	\endanswer
+
+\endproblems
+
+Construct full (not abbreviated) truth tables for the following arguments. For each one, state whether it's valid or invalid.
+
+\problems
+\problem{13}
+\argument
+ A > -B
+ -[C ^ B]
+\argumentline
+ C > -A
+\endargument
+	\answer
+	\truthtable
+	 A | B | C : A. > .-.B | -.[.C. ^ .B.] | C. > .-.A
+	\truthtableline
+	   |   |   :  .   . .  |  . . .   . .  |  .   . . 
+	\endtruthtable
+	Valid/Invalid?
+	\endanswer
+
+\problem{14}
+\argument
+ -*[[A > B] ^ -A*]
+ [-B v A] > B
+\argumentline
+ A > -[B v A]
+\endargument
+	\answer
+	\truthtable
+	 A | B : -.*[[.A. > .B.]. ^ .-.A.*] | [.-.B. v .A.]. > .B | A. > .-.[.B. v .A.]
+	\truthtableline
+	   |   :  .   . .   . . .   . . .   |  . . .   . . .   .  |  .   . . . .   . 
+	\endtruthtable
+	Valid/Invalid?
+	\endanswer
+
+\endproblems
+
+For the following argument,
+\list
+a. Use an abbreviated truth table to determine whether it's valid or invalid, given only the connectives. State your decision.
+
+b. If it's invalid, attempt to build a height model that's a counterexample. If the argument is valid, or if no countermodel can be constructed, just say so.
+
+c. State whether the argument is valid or invalid, given both the connectives and the predicates.
+\endlist
+
+\problems
+\problem{15}
+\argument
+ -Shorter(ruth,alonzo)
+ Shorter(ruth,kurt) > Shorter(ruth,alonzo)
+\argumentline
+ -[Shorter(alonzo,kurt) v Shorter(ruth,kurt)]
+\endargument
+	\answerlist
+	a.
+	\truthtable
+	 -.S(r,a) | S(r,k). > .S(r,a) | -.[.S(a,k). v .S(r,k).]
+	\truthtableline
+	  .       |       .   .       |  . .      .   .
+	\endtruthtable
+	Valid/Invalid?, given only the connectives.
+
+	b. It's valid.\OR No countermodel is possible.\OR
+	\heightmodel
+	 
+	\endheightmodel
+
+	c. Valid/Invalid?, given the connectives and predicates.
+	\endanswerlist
+
+\endproblems
+
+For the following argument, use an abbreviated truth table to determine whether it's valid or invalid. State your decision.
+
+\problems
+\problem{16}
+\argument
+ A v [B > C]
+ C > D
+ [B > D] > E
+\argumentline
+ -A > E
+\endargument
+	\answer
+	\truthtable
+	 A. v .[.B. > .C.] | C. > .D | [.B. > .D.]. > .E | -.A. > .E
+	\truthtableline
+	  .   . . .   . .  |  .   .  |  . .   . . .   .  |  . .   .
+	\endtruthtable
+	Valid/Invalid?
+	\endanswer
+
+\endproblems
+\bye

@@ -1,0 +1,193 @@
+\input logicdocument
+
+\heading
+Week 8 Problem Set Solutions
+Your Name
+Introduction to Formal Logic
+\endheading
+
+For each of the following valid arguments, complete a Fitch-style natural deduction to prove its validity. Do this by filling in the missing lines, citations, or both.
+
+\problems
+\problem{1}
+\argument
+ A
+ -[A ^ B]
+\argumentline
+ -B
+\endargument
+	\answer
+	\fitchproof
+	 1. | A
+	 2. | -[A ^ B]  ..  Goal: -B
+	    |---
+	 3. |  | B      ..  Assumption  .  Setting up: - Intro  .  Goal: !
+	    |  |---
+	 4. |  |        .  ^ Intro: 1, 3
+	 5. |  | !      .  ! Intro: 2, 4
+	    |  ++++
+	 6. |           .  - Intro: 3-5
+	\endfitchproof
+	\endanswer
+
+\problem{2}
+\argument
+ A > B
+ B > C
+ -C
+\argumentline
+ -A
+\endargument
+	\answer
+	\fitchproof
+	 1. | A > B
+	 2. | B > C
+	 3. | -C     ..  Goal: -A
+	    |---
+	 4. |  | A   ..  Assumption  .  Setting up: - Intro  .  Goal: !
+	    |  |---
+	 5. |  | 
+	\endfitchproof
+	\endanswer
+
+\problem{3}
+\argument
+ -A > -B
+ B
+\argumentline
+ A
+\endargument
+\Hint You have to prove $--A$ first (the ``last resort'' option).
+	\answer
+	\fitchproof
+	 1. | -A > -B
+	 2. | B        ..  Goal: A
+	    |---
+	 3. |  | -A    ..  Assumption  .  Setting up: - Intro  .  Goal: !
+	    |  |---
+	 4. |  |       .  
+	 5. |  |       .  
+	    |  ++++
+	 6. | --A      .  - Intro: 3-5
+	 7. | A        .  - Elim: 6
+	\endfitchproof
+	\endanswer
+
+\problem{4}
+\argument
+ [A ^ B] > C
+ -C
+\argumentline
+ A > -B
+\endargument
+	\answer
+	\fitchproof
+	 1. | [A ^ B] > C
+	 2. | -C           .. Goal: A > -B
+	    |---
+	 3. |  | A         ..  Assumption  .  Setting up: > Intro  .  Goal: -B
+	    |  |---
+	 4. |  | 
+	\endfitchproof
+	\endanswer
+
+\widerfitchsetup
+\problem{5}
+\argument
+ A v B
+ -B
+\argumentline
+ A
+\endargument
+\Hint Problems 5--7 are the first times you have to use $!$ Elim.
+	\answer
+	\fitchproof
+	 1. | A v B
+	 2. | -B     ..  Goal: A
+	    |---
+	 3. |  | A   ..  Assumption  .  Setting up: v Elim: 1  .  Goal: A
+	    |  |---
+	    |  | 
+	    |  ++++
+	    |  +
+	 ?. |  | B   ..  Assumption  .  Setting up: v Elim: 1  .  Goal: A
+	    |  |---
+	    |  | 
+	    |  | 
+	    |  ++++
+	    | A      .  v Elim: 1, 3-, ?-
+	\endfitchproof
+	\endanswer
+
+\problem{6}
+\argument
+ A v B
+ A > C
+ B > D
+\argumentline
+ -D > C
+\endargument
+	\answer
+	\fitchproof
+	 1. | 
+	\endfitchproof
+	\endanswer
+
+\problem{7}
+\argument
+ A v B
+ C v -B
+\argumentline
+ A v C
+\endargument
+\Hint You'll have to do one $v$ Elim inside another.
+	\answer
+	\fitchproof
+	 1. | 
+	\endfitchproof
+	\endanswer
+
+\resetfitchsetup
+\problem{8}
+\argument
+ [A ^ B] > [C > D]
+ [-E ^ -F] > [B ^ -D]
+ C ^ -E
+\argumentline
+ A > F
+\endargument
+\Hint Remember, when all else fails, use the last resort option.
+	\answer
+	\fitchproof
+	 1. | 
+	\endfitchproof
+	\endanswer
+
+\problem{9}
+\argument
+ -[-A ^ B]
+ -[-B v C]
+\argumentline
+ A
+\endargument
+\Hint Problems 9 and 10 are much harder than anything on the exam.
+	\answer
+	\fitchproof
+	 1. | 
+	\endfitchproof
+	\endanswer
+
+\problem{10}
+\argument
+ A > B
+\argumentline
+ -A v B
+\endargument
+	\answer
+	\fitchproof
+	 1. | 
+	\endfitchproof
+	\endanswer
+
+\endproblems
+\bye
