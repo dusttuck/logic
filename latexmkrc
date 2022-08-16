@@ -1,0 +1,1 @@
+$latex = 'tex %O %S';
