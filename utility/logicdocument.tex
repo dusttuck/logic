@@ -1,3 +1,20 @@
+\input eplain % This is used for \verbatim.
+
+% Make @text@ be \verbatim text|endverbatim.
+\def\at{@}
+\catcode`\@=\active
+\begingroup
+\gdef@{\bgroup\resetasterisk\catcode`\^=\active\def@{\endverbatim\egroup}\verbatim\makecaretbetter}
+\endgroup
+
+% Make the verbatim caret better.
+\input rotate
+\begingroup
+\catcode`\^=\active
+\gdef\makecaretbetter{\catcode`\^=\active\def^{{\setbox0=\hbox{\tt>}\rotl0\box0}}}
+\endgroup
+
+
 \input logic
 
 
