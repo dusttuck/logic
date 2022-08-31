@@ -464,7 +464,7 @@
 }}
 
 \def\makettcellmath{\def\ttcell{${}}}
-\def\makettcellvalues{\global\def\ttcell{\eightrm\makeasteriskttValue}}
+\def\makettcellvalues{\global\def\ttcell{\eightrm\makeasteriskttValue\ignorebrackets}}
 
 \newdimen\ttValueshift \ttValueshift=-.7pt
 \let\ttValuefont=\elevenbf
@@ -487,6 +487,17 @@
 	\let*\ttValue\relax%
 }
 \endgroup
+
+\def\ignorebrackets{%
+	\ifx\endignorebrackets\undefined%
+		\edef\endignorebrackets{%
+			\catcode`\noexpand\[=\the\catcode`\[%
+			\catcode`\noexpand\]=\the\catcode`\]\relax%
+		}%
+	\fi%
+	\catcode`\[=9%
+	\catcode`\]=9%
+}
 
 \def\truthtableline{%
 	\ifmmode$\fi\cr\noalign{%
