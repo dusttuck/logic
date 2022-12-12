@@ -576,11 +576,12 @@
 \gdef\makefomodelangles{%
 	\catcode`\<=\active%
 	\catcode`\>=\active%
-	\def<{$\langle$\resetcommasf}%
-	\def>{$\rangle$\increasecommasf}%
+	\def<{$\langle$\resetcommasf\relax}%
+	\def>{$\rangle$\increasecommasf\relax}%
 }
 \endgroup
 
+\edef\resetcommasf{\sfcode`\noexpand\,=\the\sfcode`\,\relax}
 \def\increasecommasf{\sfcode`\,2000}
 
 \begingroup
