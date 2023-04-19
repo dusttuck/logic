@@ -165,11 +165,7 @@
 % The widest connective is used to line up all "Intro"s and "Elim"s
 \let\widestconnective=\rightarrow
 
-% Three options for how to indent notes in a proof
-\def\fitchnotesindent{\def\fitchnotesskip{\fitchskip}}
-\def\fitchnotesnoindent{\def\fitchnotesskip{\relax}}
-\def\fitchnotesnegindent{\def\fitchnotesskip{\fitchnegskip}}
-\fitchnotesindent
+\def\fitchnotesdefaultindent{4\fitchspace}
 
 
 % -------------------------------------------
@@ -197,7 +193,6 @@
 \def\setfitchskips{%
 	\setfitchspaceneg%
 	\def\fitchskip{\hskip4\fitchspace}%
-	\def\fitchnegskip{\hskip4\fitchspaceneg}%
 	\setfitchsetupskip%
 }
 
@@ -266,7 +261,7 @@
 	\def:{%
 		\ifx\resetcapitalr\undefined \else\resetcapitalr \fi%
 		\ifx\resetcapitals\undefined \else\resetcapitals \fi%
-		\fitchnotesindent%
+		\def\fitchnotesskip{\fitchskip}%
 		\char"3A\rm%
 		\ifisfitchnotes$ \else\makehyphenendash \fi%
 		\enspace\ignorespaces%
@@ -385,9 +380,9 @@
 
 \begingroup
 \catcode`\.=\active%  Period will be used as alignment tab.
-\gdef\fitchproofcore#1{\ensureline\vtop\bgroup\the\everyfitchproof
-	#1
+\gdef\fitchproofindentby#1{\ensureline\vtop\bgroup\the\everyfitchproof
 	\setfitchskips
+	\def\fitchnotesskip{\hskip#1}
 	\periodprintsperiodfalse
 	\catcode`\.=\active
 	\offinterlineskip
@@ -410,10 +405,7 @@
 }%  The previous line ensures that blank lines immediately following \fitchproof
 \endgroup%  are ignored. It does not end with %, so TeX sees a space.
 
-\def\fitchproof{\fitchproofcore{}}
-\def\fitchproofindent{\fitchproofcore{\fitchnotesindent}}
-\def\fitchproofnoindent{\fitchproofcore{\fitchnotesnoindent}}
-\def\fitchproofnegindent{\fitchproofcore{\fitchnotesnegindent}}
+\def\fitchproof{\fitchproofindentby{\fitchnotesdefaultindent}}
 
 \def\endfitchproof{\cr\egroup\egroup\the\everyendfitchproof}
 
@@ -507,6 +499,17 @@
 	}%
 }
 
+\begingroup
+\catcode`\+=\active
+\gdef\makeplusttline{%
+	\catcode`+=\active%  TeX doesn't like \+ here, so use `+ instead of `\+
+	\def+{%              (I think the problem is that \+ is \outer).
+		\global\let+=\relax%
+		\truthtableline%
+	}%
+}
+\endgroup
+
 
 % -------------------------------------------------------
 % Truth tables: The \truthtable and \endtruthtable macros
@@ -535,6 +538,7 @@
 	\tabskip=\truthtableinteritemspace
 	\settthalfinteritemspace
 	\makettcellmath
+	\makeplusttline
 	\ignoreallspaces
 	\def\par{\endcell\omit\hskip-\tthalfinteritemspace\cr{}}
 	\obeylines%
@@ -635,8 +639,20 @@
 
 \def\argumentline{\crcr\noalign{\kern\argumentlinepadding\hrule height\argumentlinethickness\kern\argumentlinepadding}}
 
+\begingroup
+\catcode`\+=\active
+\gdef\makeplusargumentline{%
+	\catcode`+=\active%  TeX doesn't like \+ here, so use `+ instead of `\+
+	\def+{%              (I think the problem is that \+ is \outer).
+		\noalign{\global\let+=\crcr}%
+		\argumentline%
+	}%
+}
+\endgroup
+
 \def\argument{\ensureline\vtop\bgroup
 	\openup\argumentpadding
+	\makeplusargumentline
 	\def\par{\crcr}
 	\halign\bgroup%
 		\obeylines%
@@ -670,6 +686,11 @@
 	\mathcode`\8="0#138%
 	\mathcode`\9="0#139%
 }
+
+
+% -----------------------
+% Sans-serif math letters
+% -----------------------
 
 \font\tenss=cmss10
 \font\sevenss=cmss10 scaled 700%  Using cmss10 scaled because smaller cmss fonts
