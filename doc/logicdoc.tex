@@ -18,10 +18,11 @@ Here's a list of what the macros cover, with examples on subsequent pages. Click
 \unorderedlist
 \li{\bf Single-character abbreviations for symbols.} For instance,\logicstrut{0pt}{9.5pt}
 \linebreak\strut\hfil@Ax[F(x) > -G(x,a)]@\qquad produces\qquad{$Ax[F(x) > -G(x,a)]$}.
-\li{\bf Fitch-style proofs}
-\li{\bf Truth tables}
+\li{\bf Fitch-style proofs.}
+\li{\bf Truth tables.}
 \li{\bf Arguments.} Premises and a conclusion separated by a horizontal line.
 \li{\bf Diagrams of relative height.} These can be used as countermodels to prove invalidity.
+\li{\bf First-order models.}
 \li@\itmath@{\bf.} Italic math letters with word-like kerning. For instance,\logicstrut{0pt}{9.5pt}
 \linebreak\strut\hfil{\itmath$-Sees(ruth,alonzo)$}\qquad instead of\qquad$-Sees(ruth,alonzo)$.
 \li@\ssmath@{\bf.} Sans-serif math letters. For instance,\qquad{\ssmath$P^Q$}\qquad instead of\qquad$P^Q$.
@@ -31,7 +32,7 @@ Here's a list of what the macros cover, with examples on subsequent pages. Click
 
 I wrote these primarily so that students could complete problem sets, quizzes, and exams on Overleaf. Here are a few examples:
 
-\unorderedlist
+\unorderedlist\interitemskipamount=6pt
 \li Translations: \url{https://www.overleaf.com/read/tjmqfmjkqvkh}
 \li Truth tables: \url{https://www.overleaf.com/read/yswxpbykzgtj}
 \li Fitch-style proofs: \url{https://www.overleaf.com/read/gmbhbqzrbjst}
@@ -253,5 +254,39 @@ This is the argument the first truth table on the previous page proved invalid:
  A < R < K
 \endheightmodel
 \quad illustrate.
+
+\pagebreak
+
+\sec{First-order models}
+
+@<@ and @>@ produce $\langle$ and $\rangle$, and slightly decrease the space after commas between them.
+
+\firstordermodel 
+Domain: Ruth, Alonzo, Kurt, Irene
+
+Dog:    Alonzo, Irene
+Happy:  Ruth, Alonzo, Kurt
+Saw:    <Ruth, Ruth>, <Ruth, Alonzo>, <Ruth, Kurt>,
+   .    <Alonzo, Alonzo>, <Alonzo, Irene>,
+   .    <Kurt, Ruth>, <Kurt, Alonzo>, <Kurt, Irene>,
+   .    <Irene, Ruth>, <Irene, Alonzo>, <Irene, Kurt>
+\endfirstordermodel
+
+\noindent Spacing is again customizable (but increasing the depth of subsequent rows is a little weird):
+
+\fomodelfirstrowheight=18.5pt \fomodelfirstrowdepth=5.5pt%  First row (domain)
+\fomodelrowheight=13pt        \fomodelrowdepth=3.5pt%       Subsequent rows
+\fomodelpadding=.5pt%  Padding between rows
+\fomodelspace=8pt%     Horizontal space after colons
+\firstordermodel 
+Domain: Ruth, Alonzo, Kurt, Irene
+
+Dog:    Alonzo, Irene
+Happy:  Ruth, Alonzo, Kurt
+Saw:    <Ruth, Ruth>, <Ruth, Alonzo>, <Ruth, Kurt>,
+   .    <Alonzo, Alonzo>, <Alonzo, Irene>,
+   .    <Kurt, Ruth>, <Kurt, Alonzo>, <Kurt, Irene>,
+   .    <Irene, Ruth>, <Irene, Alonzo>, <Irene, Kurt>
+\endfirstordermodel
 
 \bye
