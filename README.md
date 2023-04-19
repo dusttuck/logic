@@ -2,7 +2,7 @@
 
 logic.tex is a collection of mutually-independent plain TeX macros for intuitive typesetting of standard formal logic with code that is easy to produce and easy to parse, even for people withno TeX or programming experience
 
-To see the macros in action and play around with them, you can view the contents of the demo folder on Overleaf: https://www.overleaf.com/read/nzyfjtnrvrgh.
+To see the macros in action and play around with them, you can view the contents of the doc folder on Overleaf: https://www.overleaf.com/read/nzyfjtnrvrgh.
 
 Here's a brief list of what the macros cover:
 - Single-character abbreviations for symbols, such as `>` and `-` for → and ¬
