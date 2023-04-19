@@ -2,6 +2,7 @@
 
 % Make @text@ be \verbatim text|endverbatim.
 \def\at{@}
+\edef\resetat{\catcode`\noexpand\@\the\catcode`\@\relax}
 \catcode`\@=\active
 \def@{\bgroup%
 	\ifx\resetasterisk\undefined \else\resetasterisk \fi%
