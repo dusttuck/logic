@@ -52,7 +52,6 @@
 % Mimicry of article.cls
 % ----------------------
 
-%\font\headingtitlefonts=cmr10 scaled \magstep3
 \def\headingfonts{%
 	\font\rm=cmr10 scaled \magstephalf%
 	\font\tt=cmtt10 scaled \magstephalf%
@@ -87,7 +86,7 @@
 
 \font\sectionfont=cmbx12 scaled \magstep1
 \newcount\sectioncount \sectioncount=0
-\def\sec#1{\bigskip\advance\sectioncount1{\noindent\sectionfont\the\sectioncount\hskip20pt#1}}
+\def\section#1{\bigskip\advance\sectioncount1{\noindent\sectionfont\the\sectioncount\hskip20pt#1}}
 
 
 % -------------
@@ -98,10 +97,9 @@
 \raggedbottom
 \overfullrule=0pt
 \interlinepenalty=10000
-%\parindent=0pt
 \parskip=12pt
-\interitemskipamount=12pt
-\abovelistskipamount=12pt
+\interitemskipamount=\parskip
+\abovelistskipamount=\parskip
 \belowlistskipamount=0pt
 \def\unorderedmarker{$\bullet$}
 
