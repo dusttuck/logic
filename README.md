@@ -1,6 +1,6 @@
 # logic.tex: User-friendly plain TeX macros for formal logic
 
-logic.tex is a collection of mutually-independent plain TeX macros for intuitive typesetting of standard formal logic with code that is easy to produce and easy to parse, even for people with no TeX or programming experience
+logic.tex is a collection of mutually-independent plain TeX macros for intuitive typesetting of standard formal logic with code that is easy to produce and easy to parse, even for people with no TeX or programming experience.
 
 To see the macros in action and play around with them, you can view the documentation on Overleaf: https://www.overleaf.com/read/qnnwbwfmfmkz.
 
