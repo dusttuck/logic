@@ -13,6 +13,15 @@
 	\fi%
 	\catcode`\ =9%
 }
+\edef\resetpluscatcode{\global\catcode`+=\the\catcode`+\relax}%
+\begingroup
+\catcode`\+=\active
+\gdef\resetplus{%
+	\catcode`+=\active%
+	\global\def+{\tabalign}%
+	\resetpluscatcode%
+}
+\endgroup
 
 
 % -------------
@@ -236,8 +245,8 @@
 		\edef\resethyphen{\global\catcode`\noexpand\-=\the\catcode`\-\relax}%
 	\fi%
 	\catcode`\ =\active%
-	\catcode`\-=\active%  TeX doesn't like \+ here, so use `+ instead of `\+
-	\catcode`+=\active%   (I think the problem is that \+ is \outer).
+	\catcode`\-=\active%
+	\catcode`+=\active%
 	\let =\resethyphen%  Space, which is active, is now \resethyphen.
 	\def-{$%
 		\let-=\relax%
@@ -502,8 +511,9 @@
 \begingroup
 \catcode`\+=\active
 \gdef\makeplusttline{%
-	\catcode`+=\active%  TeX doesn't like \+ here, so use `+ instead of `\+
-	\def+{%              (I think the problem is that \+ is \outer).
+	%\defineresetplus%
+	\catcode`+=\active%
+	\def+{%
 		\global\let+=\relax%
 		\truthtableline%
 	}%
@@ -549,7 +559,7 @@
 }%  The previous line ensures that blank lines immediately following \truthtable
 \endgroup%  are ignored. It does not end with %, so TeX sees a space.
 
-\def\endtruthtable{\crcr\egroup\egroup\the\everyendtruthtable}
+\def\endtruthtable{\crcr\egroup\egroup\the\everyendtruthtable\resetplus}
 
 
 % ------------------
@@ -642,8 +652,9 @@
 \begingroup
 \catcode`\+=\active
 \gdef\makeplusargumentline{%
-	\catcode`+=\active%  TeX doesn't like \+ here, so use `+ instead of `\+
-	\def+{%              (I think the problem is that \+ is \outer).
+	%\defineresetplus%
+	\catcode`+=\active%
+	\def+{%
 		\noalign{\global\let+=\crcr}%
 		\argumentline%
 	}%
@@ -661,7 +672,7 @@
 		\hskip\argumentsidepadding%
 		\hfil\cr%
 }
-\def\endargument{\crcr\egroup\egroup}
+\def\endargument{\crcr\egroup\egroup\resetplus}
 
 
 % ----------------------
